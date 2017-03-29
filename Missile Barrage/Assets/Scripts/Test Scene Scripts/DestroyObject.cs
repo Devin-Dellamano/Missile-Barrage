@@ -16,12 +16,13 @@ public class DestroyObject : MonoBehaviour
     GameObject tempNuke;
     public GameObject buttonPanels;
     public GameObject inGameOptionsButton;
+    public GameObject inGameOptionsPanel;
     public GameObject levelText;
+    public GameObject city;
+    Color grayCity = new Color(1, 1, 1, 0.3f);
+    Color vibrantCity = new Color(1, 1, 1, 1);
 
     int lives = 3;
-    public GameObject buildingOne;
-    public GameObject buildingTwo;
-    public GameObject buildingThree;
 
     public GameObject pointText;
     public int points;
@@ -33,6 +34,7 @@ public class DestroyObject : MonoBehaviour
         points = 0;
         //Time.timeScale = 0.0f;
         StartLevel();
+        inGameOptionsPanel.SetActive(false);
 
         int continueBool = PlayerPrefs.GetInt("Continue?");
         if (continueBool >= 1)
@@ -47,10 +49,12 @@ public class DestroyObject : MonoBehaviour
             pointText.GetComponent<Text>().text = "0";
 
         }
+        city.GetComponent<Image>().color = vibrantCity;
     }
 
     public void StartLevel()
     {
+        city.GetComponent<Image>().color = vibrantCity;
         doOnce = false;
         points = 0;
 
@@ -61,7 +65,7 @@ public class DestroyObject : MonoBehaviour
         {
             for (int i = 0; i < (levelNumber % 5) + 1; i++)
             {
-                Vector3 v3Pos = Camera.main.ViewportToWorldPoint(new Vector3(Random.Range(0.0f, 1.0f), 1.1f, 1.0f));
+                Vector3 v3Pos = Camera.main.ViewportToWorldPoint(new Vector3(Random.Range(0.0f, 1.0f), 1.2f, 0.5f));
                 GameObject newNuke = Instantiate(nuke);
                 int positionX = Random.Range(0, Screen.width);
                 newNuke.transform.localPosition = v3Pos;
@@ -74,7 +78,7 @@ public class DestroyObject : MonoBehaviour
 
         for (int numRockets = 0; numRockets < (levelNumber + 2); numRockets++)
         {
-            Vector3 v3Pos = Camera.main.ViewportToWorldPoint(new Vector3(Random.Range(0.0f, 1.0f), 1.1f, 1.0f));
+            Vector3 v3Pos = Camera.main.ViewportToWorldPoint(new Vector3(Random.Range(0.0f, 1.0f), 1.2f, 0.5f));
             GameObject newRocket = Instantiate(rocket);
             int positionX = Random.Range(0, Screen.width);
             newRocket.transform.localPosition = v3Pos;
@@ -86,11 +90,34 @@ public class DestroyObject : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-
+        if (Time.timeScale <= 0.0f)
+        {
+            GameObject[] rocketColors = GameObject.FindGameObjectsWithTag("Rocket");
+            GameObject[] nukeColors = GameObject.FindGameObjectsWithTag("Nuke");
+            int i = 0;
+            for (; i < rocketColors.Length; i++)
+            {
+                rocketColors[i].GetComponent<SpriteRenderer>().color = new Color(1.0f, 1.0f, 1.0f, 0.1f);
+            }
+            i = 0;
+            for (; i < nukeColors.Length; i++)
+            {
+                nukeColors[i].GetComponent<SpriteRenderer>().color = new Color(1.0f, 1.0f, 1.0f, 0.1f);
+            }
+            Color tempColor = new Color(1, 1, 1, 0.5f);
+            city.GetComponent<Image>().color = tempColor;
+        }
     }
 
     private void LateUpdate()
     {
+        if (inGameOptionsPanel.activeSelf)
+        {
+            Time.timeScale = 1.0f;
+            losingScreen.SetActive(false);
+            buttonPanels.SetActive(false);
+            return;
+        }
         if (lives <= 0)
         {
             //TODO:: pull up the losing screen
@@ -103,6 +130,8 @@ public class DestroyObject : MonoBehaviour
             i = 0;
             for (; i < destroyNukes.Length; i++)
                 DestroyImmediate(destroyNukes[i]);
+            Color tempColor = new Color(1, 1, 1, 0.1f);
+            city.GetComponent<Image>().color = tempColor;
 
             Time.timeScale = 0.0f;
             return;
@@ -116,24 +145,27 @@ public class DestroyObject : MonoBehaviour
         if ((!tempRocket && !tempNuke) && lives > 0)
         {
             buttonPanels.SetActive(true);
-            inGameOptionsButton.SetActive(false);
+            //inGameOptionsButton.SetActive(false);
             int tempPoints = int.Parse(pointText.GetComponent<Text>().text);
             PlayerPrefs.SetInt("Points", tempPoints);
 
             PlayerPrefs.SetInt("Level Number", levelNumber);
             PlayerPrefs.Save();
+            Color tempColor = new Color(1, 1, 1, 0.5f);
+            city.GetComponent<Image>().color = tempColor;
         }
     }
 
     public void NextLevel()
     {
+        city.GetComponent<Image>().color = vibrantCity;
         buttonPanels.SetActive(false);
         inGameOptionsButton.SetActive(true);
 
         levelNumber += 1;
         for (int numRockets = 0; numRockets < levelNumber + 2; numRockets++)
         {
-            Vector3 v3Pos = Camera.main.ViewportToWorldPoint(new Vector3(Random.Range(0.0f, 1.0f), 1.1f, 1.0f));
+            Vector3 v3Pos = Camera.main.ViewportToWorldPoint(new Vector3(Random.Range(0.0f, 1.0f), 1.2f, 0.5f));
             GameObject newRocket = Instantiate(rocket);
             int positionX = Random.Range(0, Screen.width);
             newRocket.transform.localPosition = v3Pos;
@@ -144,7 +176,7 @@ public class DestroyObject : MonoBehaviour
         {
             for (int i = 0; i < (int)(levelNumber / 5); i++)
             {
-                Vector3 v3Pos = Camera.main.ViewportToWorldPoint(new Vector3(Random.Range(0.0f, 1.0f), 1.1f, 1.0f));
+                Vector3 v3Pos = Camera.main.ViewportToWorldPoint(new Vector3(Random.Range(0.0f, 1.0f), 1.2f, 0.5f));
                 GameObject newNuke = Instantiate(nuke);
                 int positionX = Random.Range(0, Screen.width);
                 newNuke.transform.localPosition = v3Pos;
@@ -153,9 +185,6 @@ public class DestroyObject : MonoBehaviour
         }
 
         lives = 3;
-        buildingOne.SetActive(true);
-        buildingTwo.SetActive(true);
-        buildingThree.SetActive(true);
 
         points = int.Parse(pointText.GetComponent<Text>().text);
 
@@ -172,6 +201,7 @@ public class DestroyObject : MonoBehaviour
     {
         Time.timeScale = 1.0f;
 
+        city.GetComponent<Image>().color = vibrantCity;
         doOnce = false;
         buttonPanels.SetActive(false);
         inGameOptionsButton.SetActive(true);
@@ -187,7 +217,7 @@ public class DestroyObject : MonoBehaviour
         {
             for (int i = 0; i < (levelNumber % 5) + 1; i++)
             {
-                Vector3 v3Pos = Camera.main.ViewportToWorldPoint(new Vector3(Random.Range(0.0f, 1.0f), 1.1f, 1.0f));
+                Vector3 v3Pos = Camera.main.ViewportToWorldPoint(new Vector3(Random.Range(0.0f, 1.0f), 1.2f, 0.5f));
                 GameObject newNuke = Instantiate(nuke);
                 int positionX = Random.Range(0, Screen.width);
                 newNuke.transform.localPosition = v3Pos;
@@ -200,16 +230,13 @@ public class DestroyObject : MonoBehaviour
 
         for (int numRockets = 0; numRockets < (levelNumber + 2); numRockets++)
         {
-            Vector3 v3Pos = Camera.main.ViewportToWorldPoint(new Vector3(Random.Range(0.0f, 1.0f), 1.1f, 1.0f));
+            Vector3 v3Pos = Camera.main.ViewportToWorldPoint(new Vector3(Random.Range(0.0f, 1.0f), 1.2f, 0.5f));
             GameObject newRocket = Instantiate(rocket);
             int positionX = Random.Range(0, Screen.width);
             newRocket.transform.localPosition = v3Pos;
             newRocket.GetComponent<ClickableRocket>().randTimer = (float)(numRockets + 1);
         }
-
-        buildingOne.SetActive(true);
-        buildingTwo.SetActive(true);
-        buildingThree.SetActive(true);
+        
         lives = 3;
 
         //points = PlayerPrefs.GetInt("Points");
@@ -232,7 +259,8 @@ public class DestroyObject : MonoBehaviour
             {
                 doOnce = true;
             }
-            Handheld.Vibrate();
+            //if (Application.platform == RuntimePlatform.Android || Application.platform == RuntimePlatform.IPhonePlayer)
+            //    Handheld.Vibrate();
             Destroy(other.gameObject);
         }
 
@@ -243,28 +271,23 @@ public class DestroyObject : MonoBehaviour
             {
                 doOnce = true;
             }
-            Handheld.Vibrate();
+            //if (Application.platform == RuntimePlatform.Android || Application.platform == RuntimePlatform.IPhonePlayer)
+            //    Handheld.Vibrate();
 
             Destroy(other.gameObject);
         }
 
         if (lives == 2)
         {
-            buildingOne.SetActive(false);
-            buildingTwo.SetActive(true);
-            buildingThree.SetActive(true);
+            city.GetComponent<Image>().color = new Color(1.0f, 1.0f, 1.0f, 0.8f);
         }
         else if (lives == 1)
         {
-            buildingOne.SetActive(false);
-            buildingTwo.SetActive(false);
-            buildingThree.SetActive(true);
+            city.GetComponent<Image>().color = new Color(1.0f, 1.0f, 1.0f, 0.4f);
         }
         else if (lives <= 0)
         {
-            buildingOne.SetActive(false);
-            buildingTwo.SetActive(false);
-            buildingThree.SetActive(false);
+            city.GetComponent<Image>().color = new Color(1.0f, 1.0f, 1.0f, 0.0f);
         }
     }
 

@@ -9,6 +9,7 @@ public class ClickableRocket : MonoBehaviour
     public int points = 25;
     public GameObject pointPanel;
     public GameObject explosion;
+    public GameObject optionsPanel;
 
     float timer = 0.0f;
     public float randTimer;
@@ -21,12 +22,14 @@ public class ClickableRocket : MonoBehaviour
         //Debug.Log(randTimer);
         pointPanel = GameObject.FindGameObjectWithTag("Points");
         explosion = GameObject.Find("Explosion");
+        optionsPanel = GameObject.FindGameObjectWithTag("Level Panel");
+        optionsPanel = optionsPanel.transform.Find("Options Panel").gameObject;
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (Time.timeScale < 1.0f)
+        if (Time.timeScale < 1.0f || optionsPanel.activeSelf)
             return;
         timer += Time.deltaTime;
 
@@ -69,5 +72,19 @@ public class ClickableRocket : MonoBehaviour
     {
         lives -= 1;
 
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.tag == "Destruction")
+        {
+            GameObject tempSound = GameObject.FindGameObjectWithTag("RExplosion").gameObject;
+
+            tempSound.GetComponent<AudioSource>().Play();
+
+            GameObject newExplosion = Instantiate(explosion);
+            newExplosion.transform.position = this.gameObject.transform.position;
+            newExplosion.GetComponent<StopExplosionLooping>().startTimer = true;
+        }
     }
 }
