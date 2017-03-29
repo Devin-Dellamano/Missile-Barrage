@@ -279,14 +279,20 @@ public class DestroyObject : MonoBehaviour
 
         if (lives == 2)
         {
+            Sprite newCity = Resources.Load<Sprite>("Images/City_Damaged");
+            city.GetComponent<Image>().sprite = newCity;
             city.GetComponent<Image>().color = new Color(1.0f, 1.0f, 1.0f, 0.8f);
         }
         else if (lives == 1)
         {
+            Sprite newCity = Resources.Load<Sprite>("Images/City_Damaged");
+            city.GetComponent<Image>().sprite = newCity;
             city.GetComponent<Image>().color = new Color(1.0f, 1.0f, 1.0f, 0.4f);
         }
         else if (lives <= 0)
         {
+            Sprite newCity = Resources.Load<Sprite>("Images/City_Damaged");
+            city.GetComponent<Image>().sprite = newCity;
             city.GetComponent<Image>().color = new Color(1.0f, 1.0f, 1.0f, 0.0f);
         }
     }
