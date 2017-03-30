@@ -39,6 +39,7 @@ public class MainMenuScript : MonoBehaviour
     public void ContinueGame()
     {
         int levelNumber = PlayerPrefs.GetInt("Level Number");
+        levelNumber += 1;
         string level = "Level " + levelNumber;
         PlayerPrefs.SetInt("Level Number", levelNumber);
         SceneManager.LoadScene("Level 1");
