@@ -158,6 +158,11 @@ public class DestroyObject : MonoBehaviour
 
     public void NextLevel()
     {
+        Time.timeScale = 1.0f;
+
+        Sprite newCity = Resources.Load<Sprite>("Images/City_Undamaged");
+        city.GetComponent<Image>().sprite = newCity;
+
         city.GetComponent<Image>().color = vibrantCity;
         buttonPanels.SetActive(false);
         inGameOptionsButton.SetActive(true);
@@ -200,6 +205,9 @@ public class DestroyObject : MonoBehaviour
     public void RestartLevel(bool win)
     {
         Time.timeScale = 1.0f;
+
+        Sprite newCity = Resources.Load<Sprite>("Images/City_Undamaged");
+        city.GetComponent<Image>().sprite = newCity;
 
         city.GetComponent<Image>().color = vibrantCity;
         doOnce = false;
@@ -259,8 +267,8 @@ public class DestroyObject : MonoBehaviour
             {
                 doOnce = true;
             }
-            //if (Application.platform == RuntimePlatform.Android || Application.platform == RuntimePlatform.IPhonePlayer)
-            //    Handheld.Vibrate();
+            if (Application.platform == RuntimePlatform.Android || Application.platform == RuntimePlatform.IPhonePlayer)
+                Handheld.Vibrate();
             Destroy(other.gameObject);
         }
 
@@ -271,8 +279,8 @@ public class DestroyObject : MonoBehaviour
             {
                 doOnce = true;
             }
-            //if (Application.platform == RuntimePlatform.Android || Application.platform == RuntimePlatform.IPhonePlayer)
-            //    Handheld.Vibrate();
+            if (Application.platform == RuntimePlatform.Android || Application.platform == RuntimePlatform.IPhonePlayer)
+                Handheld.Vibrate();
 
             Destroy(other.gameObject);
         }
@@ -296,30 +304,4 @@ public class DestroyObject : MonoBehaviour
             city.GetComponent<Image>().color = new Color(1.0f, 1.0f, 1.0f, 0.0f);
         }
     }
-
-    //void OnCollisionEnter(Collision col)
-    //{
-    //	if (col.gameObject.tag == "Rocket")
-    //	{
-    //		//if (gravity >= 0.0f)
-    //		if (!doOnce)
-    //		{
-    //			doOnce = true;
-    //		}
-
-    //		Destroy(col.gameObject);
-    //	}
-
-    //	if (col.gameObject.tag == "Nuke")
-    //	{
-    //		if (!doOnce)
-    //		{
-    //			doOnce = true;
-    //		}
-
-    //		Destroy(col.gameObject);
-    //	}
-
-    //}
-
 }
