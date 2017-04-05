@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using UnityEngine.Advertisements;
 
 public class DestroyObject : MonoBehaviour
 {
@@ -121,6 +122,8 @@ public class DestroyObject : MonoBehaviour
         if (lives <= 0)
         {
             //TODO:: pull up the losing screen
+            Sprite newCity = Resources.Load<Sprite>("Images/City_Rubble");
+            city.GetComponent<Image>().sprite = newCity;
             losingScreen.SetActive(true);
             GameObject[] destroyRockets = GameObject.FindGameObjectsWithTag("Rocket");
             GameObject[] destroyNukes = GameObject.FindGameObjectsWithTag("Nuke");
@@ -159,6 +162,8 @@ public class DestroyObject : MonoBehaviour
     public void NextLevel()
     {
         Time.timeScale = 1.0f;
+        if ((levelNumber % 3) == 0)
+            ShowAd();
 
         Sprite newCity = Resources.Load<Sprite>("Images/City_Undamaged");
         city.GetComponent<Image>().sprite = newCity;
@@ -293,15 +298,23 @@ public class DestroyObject : MonoBehaviour
         }
         else if (lives == 1)
         {
-            Sprite newCity = Resources.Load<Sprite>("Images/City_Damaged");
+            Sprite newCity = Resources.Load<Sprite>("Images/City_Desolate");
             city.GetComponent<Image>().sprite = newCity;
             city.GetComponent<Image>().color = new Color(1.0f, 1.0f, 1.0f, 0.4f);
         }
         else if (lives <= 0)
         {
-            Sprite newCity = Resources.Load<Sprite>("Images/City_Damaged");
+            Sprite newCity = Resources.Load<Sprite>("Images/City_Rubble");
             city.GetComponent<Image>().sprite = newCity;
             city.GetComponent<Image>().color = new Color(1.0f, 1.0f, 1.0f, 0.0f);
+        }
+    }
+
+    public void ShowAd()
+    {
+        if (Advertisement.IsReady())
+        {
+            Advertisement.Show();
         }
     }
 }
