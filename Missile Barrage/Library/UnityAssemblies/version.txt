@@ -1,11 +1,15 @@
 5.5.2p2:3.0.0.1
 Android
-F:/Unity/Editor/Data/Managed/UnityEngine.dll
-F:/Unity/Editor/Data/UnityExtensions/Unity/Advertisements/UnityEngine.Advertisements.dll
-F:/Unity/Editor/Data/UnityExtensions/Unity/GUISystem/UnityEngine.UI.dll
-F:/Unity/Editor/Data/UnityExtensions/Unity/Networking/UnityEngine.Networking.dll
-F:/Unity/Editor/Data/UnityExtensions/Unity/PlaymodeTestsRunner/UnityEngine.PlaymodeTestsRunner.dll
-F:/Unity/Editor/Data/UnityExtensions/Unity/UnityAnalytics/UnityEngine.Analytics.dll
-F:/Unity/Editor/Data/UnityExtensions/Unity/UnityHoloLens/RuntimeEditor/UnityEngine.HoloLens.dll
-F:/Unity/Editor/Data/UnityExtensions/Unity/UnityVR/RuntimeEditor/UnityEngine.VR.dll
-F:/Unity/Editor/Data/Managed/UnityEditor.dll
+E:/Mobile Unity/Editor/Data/Managed/UnityEngine.dll
+E:/Mobile Unity/Editor/Data/UnityExtensions/Unity/Advertisements/UnityEngine.Advertisements.dll
+E:/Mobile Unity/Editor/Data/UnityExtensions/Unity/GUISystem/UnityEngine.UI.dll
+E:/Mobile Unity/Editor/Data/UnityExtensions/Unity/Networking/UnityEngine.Networking.dll
+E:/Mobile Unity/Editor/Data/UnityExtensions/Unity/PlaymodeTestsRunner/UnityEngine.PlaymodeTestsRunner.dll
+E:/Mobile Unity/Editor/Data/UnityExtensions/Unity/UnityAnalytics/UnityEngine.Analytics.dll
+E:/Mobile Unity/Editor/Data/UnityExtensions/Unity/UnityHoloLens/RuntimeEditor/UnityEngine.HoloLens.dll
+E:/Mobile Unity/Editor/Data/UnityExtensions/Unity/UnityVR/RuntimeEditor/UnityEngine.VR.dll
+E:/Mobile Unity/Editor/Data/Managed/UnityEditor.dll
+E:/Mobile Unity/Editor/Data/Managed/Mono.Cecil.dll
+E:/Mobile Unity/Editor/Data/PlaybackEngines/AppleTVSupport/UnityEditor.iOS.Extensions.Xcode.dll
+E:/Mobile Unity/Editor/Data/PlaybackEngines/iOSSupport/UnityEditor.iOS.Extensions.Xcode.dll
+E:/Mobile Unity/Editor/Data/PlaybackEngines/iOSSupport/UnityEditor.iOS.Extensions.Common.dll

@@ -12,6 +12,7 @@ public class DestroyObject : MonoBehaviour
     public GameObject rocket;
     public GameObject nuke;
     int levelNumber;
+    int numOfNukes = 0;
 
     GameObject tempRocket;
     GameObject tempNuke;
@@ -43,6 +44,19 @@ public class DestroyObject : MonoBehaviour
             points = PlayerPrefs.GetInt("Points");
             pointText.GetComponent<Text>().text = points.ToString();
             levelText.GetComponent<Text>().text = "Level " + levelNumber;
+            numOfNukes = PlayerPrefs.GetInt("NukeNumber");
+
+            if (numOfNukes > 0 && (levelNumber % 5) != 0)
+            {
+                for (int i = 0; i < numOfNukes; i++)
+                {
+                    Vector3 v3Pos = Camera.main.ViewportToWorldPoint(new Vector3(Random.Range(0.2f, 0.8f), 1.2f, 0.5f));
+                    GameObject newNuke = Instantiate(nuke);
+                    int positionX = Random.Range(0, Screen.width);
+                    newNuke.transform.localPosition = v3Pos;
+                    newNuke.GetComponent<ClickableNuke>().randTimer = (float)(i + 1);
+                }
+            }
         }
         else
         {
@@ -66,7 +80,7 @@ public class DestroyObject : MonoBehaviour
         {
             for (int i = 0; i < (levelNumber % 5) + 1; i++)
             {
-                Vector3 v3Pos = Camera.main.ViewportToWorldPoint(new Vector3(Random.Range(0.0f, 1.0f), 1.2f, 0.5f));
+                Vector3 v3Pos = Camera.main.ViewportToWorldPoint(new Vector3(Random.Range(0.2f, 0.8f), 1.2f, 0.5f));
                 GameObject newNuke = Instantiate(nuke);
                 int positionX = Random.Range(0, Screen.width);
                 newNuke.transform.localPosition = v3Pos;
@@ -79,7 +93,7 @@ public class DestroyObject : MonoBehaviour
 
         for (int numRockets = 0; numRockets < (levelNumber + 2); numRockets++)
         {
-            Vector3 v3Pos = Camera.main.ViewportToWorldPoint(new Vector3(Random.Range(0.0f, 1.0f), 1.2f, 0.5f));
+            Vector3 v3Pos = Camera.main.ViewportToWorldPoint(new Vector3(Random.Range(0.2f, 0.8f), 1.2f, 0.5f));
             GameObject newRocket = Instantiate(rocket);
             int positionX = Random.Range(0, Screen.width);
             newRocket.transform.localPosition = v3Pos;
@@ -91,6 +105,14 @@ public class DestroyObject : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        //if (Advertisement.isShowing)
+        //    Time.timeScale = 0.0f;
+        //else
+        //{
+        //    Time.timeScale = 1.0f;
+        //    FullColor();
+        //}
+
         if (Time.timeScale <= 0.0f)
         {
             GameObject[] rocketColors = GameObject.FindGameObjectsWithTag("Rocket");
@@ -141,8 +163,8 @@ public class DestroyObject : MonoBehaviour
         }
         tempRocket = GameObject.FindGameObjectWithTag("Rocket");
 
-        int nukes = PlayerPrefs.GetInt("Level Number");
-        if (nukes % 5 == 0)
+        int numLevel = PlayerPrefs.GetInt("Level Number");
+        if (numLevel >= 5)
             tempNuke = GameObject.FindGameObjectWithTag("Nuke");
 
         if ((!tempRocket && !tempNuke) && lives > 0)
@@ -151,7 +173,7 @@ public class DestroyObject : MonoBehaviour
             //inGameOptionsButton.SetActive(false);
             int tempPoints = int.Parse(pointText.GetComponent<Text>().text);
             PlayerPrefs.SetInt("Points", tempPoints);
-
+            PlayerPrefs.SetInt("NukeNumber", numOfNukes);
             PlayerPrefs.SetInt("Level Number", levelNumber);
             PlayerPrefs.Save();
             Color tempColor = new Color(1, 1, 1, 0.5f);
@@ -159,11 +181,34 @@ public class DestroyObject : MonoBehaviour
         }
     }
 
+    void FullColor()
+    {
+        if (!doOnce)
+        {
+            GameObject[] rocketColors = GameObject.FindGameObjectsWithTag("Rocket");
+            GameObject[] nukeColors = GameObject.FindGameObjectsWithTag("Nuke");
+            int i = 0;
+            for (; i < rocketColors.Length; i++)
+            {
+                rocketColors[i].GetComponent<SpriteRenderer>().color = new Color(1.0f, 1.0f, 1.0f, 1.0f);
+            }
+            i = 0;
+            for (; i < nukeColors.Length; i++)
+            {
+                nukeColors[i].GetComponent<SpriteRenderer>().color = new Color(1.0f, 1.0f, 1.0f, 1.0f);
+            }
+            Color tempColor = new Color(1, 1, 1, 1.0f);
+            city.GetComponent<Image>().color = tempColor;
+            doOnce = true;
+        }
+    }
+
     public void NextLevel()
     {
-        Time.timeScale = 1.0f;
-        if ((levelNumber % 3) == 0)
-            ShowAd();
+        //if ((levelNumber % 3) == 0)
+        //    ShowAd();
+
+        doOnce = false;
 
         Sprite newCity = Resources.Load<Sprite>("Images/City_Undamaged");
         city.GetComponent<Image>().sprite = newCity;
@@ -175,7 +220,7 @@ public class DestroyObject : MonoBehaviour
         levelNumber += 1;
         for (int numRockets = 0; numRockets < levelNumber + 2; numRockets++)
         {
-            Vector3 v3Pos = Camera.main.ViewportToWorldPoint(new Vector3(Random.Range(0.0f, 1.0f), 1.2f, 0.5f));
+            Vector3 v3Pos = Camera.main.ViewportToWorldPoint(new Vector3(Random.Range(0.2f, 0.8f), 1.2f, 0.5f));
             GameObject newRocket = Instantiate(rocket);
             int positionX = Random.Range(0, Screen.width);
             newRocket.transform.localPosition = v3Pos;
@@ -184,9 +229,10 @@ public class DestroyObject : MonoBehaviour
 
         if ((levelNumber % 5) == 0)
         {
+            numOfNukes += 1;
             for (int i = 0; i < (int)(levelNumber / 5); i++)
             {
-                Vector3 v3Pos = Camera.main.ViewportToWorldPoint(new Vector3(Random.Range(0.0f, 1.0f), 1.2f, 0.5f));
+                Vector3 v3Pos = Camera.main.ViewportToWorldPoint(new Vector3(Random.Range(0.2f, 0.8f), 1.2f, 0.5f));
                 GameObject newNuke = Instantiate(nuke);
                 int positionX = Random.Range(0, Screen.width);
                 newNuke.transform.localPosition = v3Pos;
@@ -194,12 +240,23 @@ public class DestroyObject : MonoBehaviour
             }
         }
 
+        if (numOfNukes > 0 && (levelNumber % 5 ) != 0)
+        {
+            for (int i = 0; i < numOfNukes; i++)
+            {
+                Vector3 v3Pos = Camera.main.ViewportToWorldPoint(new Vector3(Random.Range(0.2f, 0.8f), 1.2f, 0.5f));
+                GameObject newNuke = Instantiate(nuke);
+                int positionX = Random.Range(0, Screen.width);
+                newNuke.transform.localPosition = v3Pos;
+                newNuke.GetComponent<ClickableNuke>().randTimer = (float)(i + 1);
+            }
+        }
         lives = 3;
 
         points = int.Parse(pointText.GetComponent<Text>().text);
 
         PlayerPrefs.SetInt("Points", points);
-
+        PlayerPrefs.SetInt("NukeNumber", numOfNukes);
         PlayerPrefs.SetInt("Level Number", levelNumber);
         PlayerPrefs.Save();
 
@@ -230,7 +287,7 @@ public class DestroyObject : MonoBehaviour
         {
             for (int i = 0; i < (levelNumber % 5) + 1; i++)
             {
-                Vector3 v3Pos = Camera.main.ViewportToWorldPoint(new Vector3(Random.Range(0.0f, 1.0f), 1.2f, 0.5f));
+                Vector3 v3Pos = Camera.main.ViewportToWorldPoint(new Vector3(Random.Range(0.2f, 0.8f), 1.2f, 0.5f));
                 GameObject newNuke = Instantiate(nuke);
                 int positionX = Random.Range(0, Screen.width);
                 newNuke.transform.localPosition = v3Pos;
@@ -243,11 +300,23 @@ public class DestroyObject : MonoBehaviour
 
         for (int numRockets = 0; numRockets < (levelNumber + 2); numRockets++)
         {
-            Vector3 v3Pos = Camera.main.ViewportToWorldPoint(new Vector3(Random.Range(0.0f, 1.0f), 1.2f, 0.5f));
+            Vector3 v3Pos = Camera.main.ViewportToWorldPoint(new Vector3(Random.Range(0.2f, 0.8f), 1.2f, 0.5f));
             GameObject newRocket = Instantiate(rocket);
             int positionX = Random.Range(0, Screen.width);
             newRocket.transform.localPosition = v3Pos;
             newRocket.GetComponent<ClickableRocket>().randTimer = (float)(numRockets + 1);
+        }
+
+        if (numOfNukes > 0 && (levelNumber % 5) != 0)
+        {
+            for (int i = 0; i < numOfNukes; i++)
+            {
+                Vector3 v3Pos = Camera.main.ViewportToWorldPoint(new Vector3(Random.Range(0.2f, 0.8f), 1.2f, 0.5f));
+                GameObject newNuke = Instantiate(nuke);
+                int positionX = Random.Range(0, Screen.width);
+                newNuke.transform.localPosition = v3Pos;
+                newNuke.GetComponent<ClickableNuke>().randTimer = (float)(i + 1);
+            }
         }
         
         lives = 3;
@@ -268,10 +337,10 @@ public class DestroyObject : MonoBehaviour
         {
             lives -= 1;
             //if (gravity >= 0.0f)
-            if (!doOnce)
-            {
-                doOnce = true;
-            }
+            //if (!doOnce)
+            //{
+            //    doOnce = true;
+            //}
             if (Application.platform == RuntimePlatform.Android || Application.platform == RuntimePlatform.IPhonePlayer)
                 Handheld.Vibrate();
             Destroy(other.gameObject);
@@ -280,10 +349,10 @@ public class DestroyObject : MonoBehaviour
         if (other.gameObject.tag == "Nuke")
         {
             lives -= 2;
-            if (!doOnce)
-            {
-                doOnce = true;
-            }
+            //if (!doOnce)
+            //{
+            //    doOnce = true;
+            //}
             if (Application.platform == RuntimePlatform.Android || Application.platform == RuntimePlatform.IPhonePlayer)
                 Handheld.Vibrate();
 
@@ -314,6 +383,7 @@ public class DestroyObject : MonoBehaviour
     {
         if (Advertisement.IsReady())
         {
+            Time.timeScale = 0.0f;
             Advertisement.Show();
         }
     }
